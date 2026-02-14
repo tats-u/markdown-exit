@@ -126,7 +126,7 @@ describe('markdown-it', () => {
     test_pattern('x' + ' '.repeat(150000) + 'x  \nx')
   })
 
-  it('linkify trailing asterisks pattern (CVE-2024-10041)', () => {
+  it('linkify trailing asterisks pattern (CVE-2026-2327)', () => {
     const md = MarkdownExit({ linkify: true })
     // This pattern would cause ReDoS with the old regex implementation
     const result = md.render('https://test.com?' + '*'.repeat(70000) + 'a')
