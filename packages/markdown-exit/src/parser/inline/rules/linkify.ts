@@ -41,7 +41,10 @@ export default function linkify(state: StateInline, silent: boolean) {
     return false
 
   // disallow '*' at the end of the link (conflicts with emphasis)
-  url = url.replace(/\*+$/, '')
+  // Trim trailing '*' characters without using regex to avoid ReDoS
+  while (url.length && url[url.length - 1] === '*') {
+    url = url.slice(0, -1)
+  }
 
   const fullUrl = state.md.normalizeLink(url)
   if (!state.md.validateLink(fullUrl))

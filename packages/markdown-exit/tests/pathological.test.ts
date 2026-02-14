@@ -125,4 +125,11 @@ describe('markdown-it', () => {
   it('hardbreak whitespaces pattern', () => {
     test_pattern('x' + ' '.repeat(150000) + 'x  \nx')
   })
+
+  it('linkify trailing asterisks pattern (CVE-2024-10041)', () => {
+    const md = MarkdownExit({ linkify: true })
+    // This pattern would cause ReDoS with the old regex implementation
+    const result = md.render('http://example.com/' + '*'.repeat(50000) + ' ')
+    expect(result).toBeTruthy()
+  })
 })
