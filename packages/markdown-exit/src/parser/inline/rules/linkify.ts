@@ -41,12 +41,14 @@ export default function linkify(state: StateInline, silent: boolean) {
     return false
 
   // disallow '*' at the end of the link (conflicts with emphasis)
-  // Trim trailing '*' characters without using regex to avoid ReDoS
-  let lastIdx = url.length - 1
-  while (lastIdx >= 0 && url[lastIdx] === '*') {
-    lastIdx--
+  // do manual backsearch to avoid perf issues with regex /\*+$/ on "****...****a".
+  let urlEnd = url.length
+  while (urlEnd > 0 && url.charCodeAt(urlEnd - 1) === 0x2A/* * */) {
+    urlEnd--
   }
-  url = url.slice(0, lastIdx + 1)
+  if (urlEnd !== url.length) {
+    url = url.slice(0, urlEnd)
+  }
 
   const fullUrl = state.md.normalizeLink(url)
   if (!state.md.validateLink(fullUrl))
